@@ -21,6 +21,33 @@ class CouponTest < ActiveSupport::TestCase
       should "create a credit with the amount determined by the calculator" do
         assert_equal BigDecimal.new("0.99"), @discount.credit.amount
       end
+      context "with additional coupon" do
+        setup { @additional_coupon = Factory(:coupon) }
+        context "when existing coupon prohibits combination" do
+          setup do
+            @coupon.combine = false
+            @additional_coupon.combine = true
+            @additional_coupon.create_discount(@checkout)
+          end
+          should_not_change "Discount.count"
+        end
+        context "when additional coupon prohibits combination" do
+          setup do
+            @coupon.combine = true
+            @additional_coupon.combine = false
+            @additional_coupon.create_discount(@checkout)
+          end
+          should_not_change "Discount.count"
+        end
+        context "when both coupons allow combination" do
+          setup do
+            @coupon.combine = true
+            @additional_coupon.combine = true
+            @additional_coupon.create_discount(@checkout)
+          end
+          should_change "Discount.count", :by => 1
+        end
+      end
     end    
     context "when expired" do
       setup do 
@@ -36,11 +63,5 @@ class CouponTest < ActiveSupport::TestCase
       end
       should_not_change "Discount.count"
     end
-  end
-end
-       
-class TestCalc
-  def self.calculate_discount(checkout)    
-    0.99
   end
 end

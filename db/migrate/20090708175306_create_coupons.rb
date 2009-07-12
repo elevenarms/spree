@@ -6,6 +6,7 @@ class CreateCoupons < ActiveRecord::Migration
       t.string :description
       t.string :calculator
       t.integer :usage_limit
+      t.boolean :combine
       t.datetime :expires_at
       t.timestamps
     end

@@ -24,3 +24,9 @@ def setup
   super
   @params = {}
 end
+
+class TestCalc
+  def self.calculate_discount(checkout)    
+    0.99
+  end
+end

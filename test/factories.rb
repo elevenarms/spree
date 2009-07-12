@@ -136,4 +136,10 @@ end
 Factory.define :coupon do |f|
   f.code "FOO"
   f.calculator "TestCalc"
+  f.combine true
+end
+
+Factory.define :discount do |f|
+  f.association :checkout
+  f.association :coupon  
 end
